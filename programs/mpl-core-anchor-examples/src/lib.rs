@@ -8,7 +8,7 @@ use anchor_lang::prelude::*;
 pub use constants::*;
 pub use instructions::*;
 
-declare_id!("EXMPLWxvGsyDuHMcnZHBnUN32RaoyVowkzhyXmAVxmEM");
+declare_id!("BGDWR7vHYwqw43d43XjepHPYBfF2LVNqgLT6DFcYfkM9");
 
 #[program]
 pub mod mpl_core_anchor_wrapper {
