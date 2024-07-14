@@ -4,4 +4,6 @@ use anchor_lang::prelude::*;
 pub enum WrapperError {
     #[msg("Invalid plugin type")]
     InvalidPluginType,
+    #[msg("Insufficient funds")]
+    InsufficientFunds,
 }

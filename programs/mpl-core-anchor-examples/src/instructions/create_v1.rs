@@ -1,4 +1,8 @@
+use crate::constants::*;
+use crate::error::*;
+use crate::DepositJackpot;
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::sysvar::instructions;
 use mpl_core::types::{DataState, PluginAuthorityPair};
 
 #[derive(Accounts)]
@@ -17,7 +21,7 @@ pub struct CreateV1<'info> {
 
     /// The account paying for the storage fees.
     #[account(mut)]
-    pub payer: Signer<'info>,
+    pub signer: Signer<'info>,
 
     /// The owner of the new asset. Defaults to the authority if not present.
     /// CHECK: Checked in mpl-core.
@@ -44,17 +48,36 @@ pub struct CreateV1<'info> {
 pub struct CreateV1Args {
     pub name: String,
     pub uri: String,
-    // TODO: Add plugin_authority_pair
+    // TODO: Add plugin_authority_pair if needed
     pub plugins: Option<Vec<PluginAuthorityPair>>,
 }
 
 impl<'info> CreateV1<'info> {
     pub fn handler(ctx: Context<CreateV1>, args: CreateV1Args) -> Result<()> {
+        // check that payer account has more than JACKPOT_FEES lamport to pay for the jackpot fees
+        let payer_balance = ctx.accounts.signer.lamports();
+        if payer_balance < JACKPOT_FEES {
+            return Err(WrapperError::InsufficientFunds.into());
+        }
+
+        /*
+        TODO : marche pas !!!!!
+        //create a DepositJAckpot context
+        let ctx_deposit_jackpot = DepositJackpot {
+            jackpot_vault: ctx.accounts.jackpot_vault.to_account_info(),
+            signer: ctx.accounts.signer,
+            system_program: ctx.accounts.system_program,
+        };
+
+        //call the deposit_jackpot(ctx: Context<DepositJackpot>, amount: u64) -> Result<()> function to deposit JACKPOT_FEES into the jackpot vault
+        DepositJackpot::<'_>::handler(ctx_deposit_jackpot, JACKPOT_FEES)?;
+        */
+
         mpl_core::instructions::CreateV1Cpi {
             asset: &ctx.accounts.asset.to_account_info(),
             collection: ctx.accounts.collection.as_ref(),
             authority: ctx.accounts.authority.as_deref(),
-            payer: &ctx.accounts.payer.to_account_info(),
+            payer: &ctx.accounts.signer.to_account_info(),
             owner: ctx.accounts.owner.as_ref(),
             update_authority: ctx.accounts.update_authority.as_ref(),
             system_program: &ctx.accounts.system_program.to_account_info(),

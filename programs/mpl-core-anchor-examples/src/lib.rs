@@ -4,7 +4,6 @@ pub mod instructions;
 pub mod state;
 
 use anchor_lang::prelude::*;
-
 pub use constants::*;
 pub use instructions::*;
 
@@ -25,40 +24,20 @@ pub mod mpl_core_anchor_wrapper {
         create_collection_v1::CreateCollectionV1::handler(ctx, args)
     }
 
-    pub fn add_plugin_v1(ctx: Context<AddPluginV1>, args: AddPluginV1Args) -> Result<()> {
-        add_plugin_v1::AddPluginV1::handler(ctx, args)
-    }
-
-    pub fn add_collection_plugin_v1(
-        ctx: Context<AddCollectionPluginV1>,
-        args: AddCollectionPluginV1Args,
-    ) -> Result<()> {
-        add_collection_plugin_v1::AddCollectionPluginV1::handler(ctx, args)
-    }
-
-    pub fn remove_plugin_v1(ctx: Context<RemovePluginV1>, args: RemovePluginV1Args) -> Result<()> {
-        remove_plugin_v1::RemovePluginV1::handler(ctx, args)
-    }
-
-    pub fn remove_collection_plugin_v1(
-        ctx: Context<RemoveCollectionPluginV1>,
-        args: RemoveCollectionPluginV1Args,
-    ) -> Result<()> {
-        remove_collection_plugin_v1::RemoveCollectionPluginV1::handler(ctx, args)
-    }
-
-    pub fn update_plugin_v1(ctx: Context<UpdatePluginV1>, args: UpdatePluginV1Args) -> Result<()> {
-        update_plugin_v1::UpdatePluginV1::handler(ctx, args)
-    }
-
-    pub fn update_collection_plugin_v1(
-        ctx: Context<UpdateCollectionPluginV1>,
-        args: UpdateCollectionPluginV1Args,
-    ) -> Result<()> {
-        update_collection_plugin_v1::UpdateCollectionPluginV1::handler(ctx, args)
-    }
-
     pub fn transfer_v1(ctx: Context<TransferV1>, args: TransferV1Args) -> Result<()> {
         transfer_v1::TransferV1::handler(ctx, args)
+    }
+
+    pub fn deposit_jackpot(ctx: Context<DepositJackpot>, amount: u64) -> Result<()> {
+        deposit_jackpot::DepositJackpot::handler(ctx, amount)
+    }
+
+    pub fn withdraw_jackpot(ctx: Context<WithdrawJackpot>, amount: u64) -> Result<()> {
+        withdraw_jackpot::WithdrawJackpot::handler(ctx, amount)
+    }
+
+    // Fonction pour initialiser le vault
+    pub fn init_jackpot_vault(ctx: Context<InitializeJackpotVault>) -> Result<()> {
+        initialize_jackpot_vault::InitializeJackpotVault::handler(ctx)
     }
 }

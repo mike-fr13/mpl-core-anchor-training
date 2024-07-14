@@ -7,6 +7,7 @@ solana-keygen pubkey ~/.config/solana/id.json
 
 # balance 
 solana balance
+solana balance --url https://api.devnet.solana.com
 
 # laucnh local blockchain
 solana-test-validator
