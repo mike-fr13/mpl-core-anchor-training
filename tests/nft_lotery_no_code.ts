@@ -1,13 +1,21 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { MplCoreAnchorWrapper } from "../target/types/mpl_core_anchor_wrapper";
 import { DataState, MPL_CORE_PROGRAM_ID } from "@metaplex-foundation/mpl-core";
+import { NftLoteryNoCode } from "../target/types/nft_lotery_no_code";
 
-describe("mpl-core-anchor-examples", () => {
+
+describe("nft_lotery_no_code", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
-  const program = anchor.workspace.MplCoreAnchorWrapper as Program<MplCoreAnchorWrapper>;
+  const program = anchor.workspace.NftLoteryNoCode as Program<NftLoteryNoCode>;
+
+  it("Jacpot Vault Is initialized!", async () => {
+    // Add your test here.
+    const tx = await program.methods.initJackpotVault().rpc();
+    console.log("Your transaction signature", tx);
+  });
+
 
   it("Can create an Asset", async () => {
     const asset = anchor.web3.Keypair.generate();
@@ -79,4 +87,5 @@ describe("mpl-core-anchor-examples", () => {
       .rpc();
     console.log("Your transaction signature", tx);
   });
+
 });
