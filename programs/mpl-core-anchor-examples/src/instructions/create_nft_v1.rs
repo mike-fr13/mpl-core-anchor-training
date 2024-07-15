@@ -6,7 +6,7 @@ use anchor_lang::solana_program::sysvar::instructions;
 use mpl_core::types::{DataState, PluginAuthorityPair};
 
 #[derive(Accounts)]
-pub struct CreateV1<'info> {
+pub struct CreateNftV1<'info> {
     /// The address of the new asset.
     #[account(mut)]
     pub asset: Signer<'info>,
@@ -45,15 +45,15 @@ pub struct CreateV1<'info> {
 }
 
 #[derive(AnchorDeserialize, AnchorSerialize)]
-pub struct CreateV1Args {
+pub struct CreateNftV1Args {
     pub name: String,
     pub uri: String,
     // TODO: Add plugin_authority_pair if needed
     pub plugins: Option<Vec<PluginAuthorityPair>>,
 }
 
-impl<'info> CreateV1<'info> {
-    pub fn handler(ctx: Context<CreateV1>, args: CreateV1Args) -> Result<()> {
+impl<'info> CreateNftV1<'info> {
+    pub fn handler(ctx: Context<CreateNftV1>, args: CreateNftV1Args) -> Result<()> {
         // check that payer account has more than JACKPOT_FEES lamport to pay for the jackpot fees
         let payer_balance = ctx.accounts.signer.lamports();
         if payer_balance < JACKPOT_FEES {

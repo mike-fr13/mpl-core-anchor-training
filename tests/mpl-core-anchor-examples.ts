@@ -12,7 +12,7 @@ describe("mpl-core-anchor-examples", () => {
   it("Can create an Asset", async () => {
     const asset = anchor.web3.Keypair.generate();
     // Add your test here.
-    const tx = await program.methods.createV1({
+    const tx = await program.methods.createNftV1({
       name: "Hello Anchor!",
       uri: "www.example.com",
       plugins: null,
@@ -20,7 +20,7 @@ describe("mpl-core-anchor-examples", () => {
       .accounts({
         asset: asset.publicKey,
         collection: null,
-        payer: anchor.getProvider().publicKey,
+        signer: anchor.getProvider().publicKey,
         owner: null,
         updateAuthority: null,
         logWrapper: null,
@@ -51,7 +51,7 @@ describe("mpl-core-anchor-examples", () => {
   it("Can transfer an Asset", async () => {
     const asset = anchor.web3.Keypair.generate();
     // Add your test here.
-    await program.methods.createV1({
+    await program.methods.createNftV1({
       name: "Hello Anchor!",
       uri: "www.example.com",
       plugins: null,
@@ -59,7 +59,7 @@ describe("mpl-core-anchor-examples", () => {
       .accounts({
         asset: asset.publicKey,
         collection: null,
-        payer: anchor.getProvider().publicKey,
+        signer: anchor.getProvider().publicKey,
         owner: null,
         updateAuthority: null,
         logWrapper: null,

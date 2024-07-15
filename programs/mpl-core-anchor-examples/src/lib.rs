@@ -13,8 +13,8 @@ declare_id!("BGDWR7vHYwqw43d43XjepHPYBfF2LVNqgLT6DFcYfkM9");
 pub mod mpl_core_anchor_wrapper {
     use super::*;
 
-    pub fn create_v1(ctx: Context<CreateV1>, args: CreateV1Args) -> Result<()> {
-        create_v1::CreateV1::handler(ctx, args)
+    pub fn create_nft_v1(ctx: Context<CreateNftV1>, args: CreateNftV1Args) -> Result<()> {
+        create_nft_v1::CreateNftV1::handler(ctx, args)
     }
 
     pub fn create_collection_v1(
