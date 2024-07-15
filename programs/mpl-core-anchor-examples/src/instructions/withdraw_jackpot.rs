@@ -5,7 +5,7 @@ use anchor_lang::solana_program::native_token::LAMPORTS_PER_SOL;
 
 #[derive(Accounts)]
 pub struct WithdrawJackpot<'info> {
-    #[account(mut, seeds = [b"vault"], bump)]
+    #[account(mut, seeds = [JACKPOT_SEED.as_bytes()], bump)]
     pub jackpot_vault: Account<'info, JackpotVault>,
     #[account(mut)]
     pub signer: Signer<'info>,

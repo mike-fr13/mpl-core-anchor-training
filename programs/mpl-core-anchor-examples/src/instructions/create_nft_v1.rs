@@ -1,6 +1,7 @@
 use crate::constants::*;
 use crate::error::*;
 use crate::DepositJackpot;
+use crate::JackpotVault;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar::instructions;
 use mpl_core::types::{DataState, PluginAuthorityPair};
@@ -42,6 +43,11 @@ pub struct CreateNftV1<'info> {
     /// CHECK: Checked in mpl-core.
     #[account(address = mpl_core::ID)]
     pub mpl_core: AccountInfo<'info>,
+    //JACKPOT vault account
+    /*
+    #[account(mut, seeds = [JACKPOT_SEED.as_bytes()], bump)]
+    pub jackpot_vault: Account<'info, JackpotVault>,
+    */
 }
 
 #[derive(AnchorDeserialize, AnchorSerialize)]
@@ -60,14 +66,21 @@ impl<'info> CreateNftV1<'info> {
             return Err(WrapperError::InsufficientFunds.into());
         }
 
+        //TODO : marche pas !!!!!
         /*
-        TODO : marche pas !!!!!
         //create a DepositJAckpot context
-        let ctx_deposit_jackpot = DepositJackpot {
-            jackpot_vault: ctx.accounts.jackpot_vault.to_account_info(),
+        let deposit_jackpot = DepositJackpot {
+            jackpot_vault: ctx.accounts.jackpot_vault,
             signer: ctx.accounts.signer,
             system_program: ctx.accounts.system_program,
         };
+
+        let ctx_deposit_jackpot = Context::new(
+            deposit_jackpot,
+            ctx.accounts.system_program,
+            ctx.accounts.signer,
+        );
+
 
         //call the deposit_jackpot(ctx: Context<DepositJackpot>, amount: u64) -> Result<()> function to deposit JACKPOT_FEES into the jackpot vault
         DepositJackpot::<'_>::handler(ctx_deposit_jackpot, JACKPOT_FEES)?;

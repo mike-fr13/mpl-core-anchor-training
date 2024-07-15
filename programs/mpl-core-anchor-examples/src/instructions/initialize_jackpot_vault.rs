@@ -13,7 +13,7 @@ use anchor_lang::prelude::*;
             init, 
             payer = signer, 
             space = 8 + 8, 
-            seeds = [b"jackpot_vault"], 
+            seeds = [JACKPOT_SEED.as_bytes()], 
             bump)]
         pub jackpot_vault: Account<'info, JackpotVault>,
         #[account(mut)]

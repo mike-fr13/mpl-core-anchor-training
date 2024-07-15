@@ -6,7 +6,7 @@ use anchor_lang::system_program;
 
 #[derive(Accounts)]
 pub struct DepositJackpot<'info> {
-    #[account(mut, seeds = [b"vault"], bump)]
+    #[account(mut, seeds = [JACKPOT_SEED.as_bytes()], bump)]
     pub jackpot_vault: Account<'info, JackpotVault>,
     #[account(mut)]
     pub signer: Signer<'info>,
