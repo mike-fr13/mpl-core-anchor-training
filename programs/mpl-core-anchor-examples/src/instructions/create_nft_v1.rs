@@ -44,7 +44,10 @@ pub struct CreateNftV1<'info> {
     pub mpl_core: AccountInfo<'info>,
 
     //JACKPOT vault account
-    #[account(mut, seeds = [JACKPOT_SEED.as_bytes()], bump)]
+    #[account(
+        mut, 
+        seeds = [JACKPOT_SEED.as_bytes()], 
+        bump)]
     pub jackpot_vault: Account<'info, JackpotVault>,
 }
 
@@ -95,11 +98,14 @@ impl<'info> CreateNftV1<'info> {
         }
         .invoke()?;
 
-        /*
+        
         // get the clock epoch
         let clock = Clock::get();
         //convert to u32
         let epoch = clock.unwrap().epoch as u32;
+        msg!("epoch {:?}", epoch);
+
+        /*  
         //convert payer account pubkey to u32
         let payer = ctx
             .accounts
@@ -108,6 +114,10 @@ impl<'info> CreateNftV1<'info> {
             .to_bytes()
             .iter()
             .fold(0, |acc, &x| acc * 256 + x as u32);
+        msg!("payer {}", payer);
+        */
+
+        /* 
         // seed = epoch xor payer
         let seed = epoch ^ payer;
         // trunc the seed betwwen 0 and 6
@@ -115,7 +125,7 @@ impl<'info> CreateNftV1<'info> {
         */
 
         //let seed = (epoch ^ payer)% (JACKPOT_MAX_TICKETS + 1);
-        /*
+        /* 
         let seed = ((Clock::get().unwrap().epoch as u32)
             ^ (ctx
                 .accounts
@@ -125,9 +135,9 @@ impl<'info> CreateNftV1<'info> {
                 .iter()
                 .fold(0, |acc, &x| acc * 256 + x as u32)))
             % (JACKPOT_MAX_TICKETS + 1);
-        msg!("Seed {:?}", seed);
         */
-
+        //msg!("Seed {:?}", seed);
+        
         Ok(())
     }
 }
