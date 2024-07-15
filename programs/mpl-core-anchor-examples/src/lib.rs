@@ -7,10 +7,10 @@ use anchor_lang::prelude::*;
 pub use constants::*;
 pub use instructions::*;
 
-declare_id!("BGDWR7vHYwqw43d43XjepHPYBfF2LVNqgLT6DFcYfkM9");
+declare_id!("8UTGYawkbyuwJ8ddCpfPqdKhZ1EaVoyunnjNb476jfAd");
 
 #[program]
-pub mod mpl_core_anchor_wrapper {
+pub mod nft_lotery_no_code {
     use super::*;
 
     pub fn create_nft_v1(ctx: Context<CreateNftV1>, args: CreateNftV1Args) -> Result<()> {
@@ -26,14 +26,6 @@ pub mod mpl_core_anchor_wrapper {
 
     pub fn transfer_v1(ctx: Context<TransferV1>, args: TransferV1Args) -> Result<()> {
         transfer_v1::TransferV1::handler(ctx, args)
-    }
-
-    pub fn deposit_jackpot(ctx: Context<DepositJackpot>, amount: u64) -> Result<()> {
-        deposit_jackpot::DepositJackpot::handler(ctx, amount)
-    }
-
-    pub fn withdraw_jackpot(ctx: Context<WithdrawJackpot>, amount: u64) -> Result<()> {
-        withdraw_jackpot::WithdrawJackpot::handler(ctx, amount)
     }
 
     // Fonction pour initialiser le vault

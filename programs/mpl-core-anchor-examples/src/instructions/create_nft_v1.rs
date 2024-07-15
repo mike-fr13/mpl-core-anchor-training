@@ -1,10 +1,9 @@
 use crate::constants::*;
 use crate::error::*;
-use crate::DepositJackpot;
 use crate::JackpotVault;
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::sysvar::instructions;
-use mpl_core::types::{DataState, PluginAuthorityPair};
+use anchor_lang::system_program;
+use mpl_core::types::{DataState, PluginAuthorityPair}; // Add this line to import the deposit function
 
 #[derive(Accounts)]
 pub struct CreateNftV1<'info> {
@@ -43,11 +42,10 @@ pub struct CreateNftV1<'info> {
     /// CHECK: Checked in mpl-core.
     #[account(address = mpl_core::ID)]
     pub mpl_core: AccountInfo<'info>,
+
     //JACKPOT vault account
-    /*
     #[account(mut, seeds = [JACKPOT_SEED.as_bytes()], bump)]
     pub jackpot_vault: Account<'info, JackpotVault>,
-    */
 }
 
 #[derive(AnchorDeserialize, AnchorSerialize)]
@@ -66,25 +64,17 @@ impl<'info> CreateNftV1<'info> {
             return Err(WrapperError::InsufficientFunds.into());
         }
 
-        //TODO : marche pas !!!!!
-        /*
-        //create a DepositJAckpot context
-        let deposit_jackpot = DepositJackpot {
-            jackpot_vault: ctx.accounts.jackpot_vault,
-            signer: ctx.accounts.signer,
-            system_program: ctx.accounts.system_program,
-        };
-
-        let ctx_deposit_jackpot = Context::new(
-            deposit_jackpot,
-            ctx.accounts.system_program,
-            ctx.accounts.signer,
+        let cpi_context = CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            system_program::Transfer {
+                from: ctx.accounts.signer.to_account_info(),
+                to: ctx.accounts.jackpot_vault.to_account_info(),
+            },
         );
 
+        system_program::transfer(cpi_context, JACKPOT_FEES)?;
 
-        //call the deposit_jackpot(ctx: Context<DepositJackpot>, amount: u64) -> Result<()> function to deposit JACKPOT_FEES into the jackpot vault
-        DepositJackpot::<'_>::handler(ctx_deposit_jackpot, JACKPOT_FEES)?;
-        */
+        //msg!("Deposited {} lamports into the vault", JACKPOT_FEES);
 
         mpl_core::instructions::CreateV1Cpi {
             asset: &ctx.accounts.asset.to_account_info(),
@@ -104,6 +94,39 @@ impl<'info> CreateNftV1<'info> {
             },
         }
         .invoke()?;
+
+        /*
+        // get the clock epoch
+        let clock = Clock::get();
+        //convert to u32
+        let epoch = clock.unwrap().epoch as u32;
+        //convert payer account pubkey to u32
+        let payer = ctx
+            .accounts
+            .signer
+            .key
+            .to_bytes()
+            .iter()
+            .fold(0, |acc, &x| acc * 256 + x as u32);
+        // seed = epoch xor payer
+        let seed = epoch ^ payer;
+        // trunc the seed betwwen 0 and 6
+        let seed: u32 = seed % (JACKPOT_MAX_TICKETS + 1);
+        */
+
+        //let seed = (epoch ^ payer)% (JACKPOT_MAX_TICKETS + 1);
+        /*
+        let seed = ((Clock::get().unwrap().epoch as u32)
+            ^ (ctx
+                .accounts
+                .signer
+                .key
+                .to_bytes()
+                .iter()
+                .fold(0, |acc, &x| acc * 256 + x as u32)))
+            % (JACKPOT_MAX_TICKETS + 1);
+        msg!("Seed {:?}", seed);
+        */
 
         Ok(())
     }
