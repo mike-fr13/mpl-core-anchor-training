@@ -5,7 +5,7 @@ use anchor_lang::prelude::*;
 pub const JACKPOT_SEED: &str = "jackpot_vault";
 
 // JACKPOT_FEES : 0.01 SOL
-pub const JACKPOT_FEES: u64 = 10000000;
+pub const JACKPOT_FEES: u32 = 10000000;
 
 // JACKPOT_MAX_TICKETS (one winner ticket and all other losers)
 pub const JACKPOT_MAX_TICKETS: u32 = 5;
