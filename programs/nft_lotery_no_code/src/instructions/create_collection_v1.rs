@@ -3,6 +3,7 @@ use crate::error::*;
 use crate::get_random_ticket_number;
 use crate::JackpotBalance;
 use crate::JackpotVault;
+use crate::JackpotWin;
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 use mpl_core::types::PluginAuthorityPair;
@@ -114,6 +115,17 @@ impl<'info> CreateCollectionV1<'info> {
 
             // reset the deposited_fee_number in the jackpot vault
             ctx.accounts.jackpot_vault.deposited_fee_number = 0;
+
+            //emit a jackpot win event
+            emit!(JackpotWin {
+                winner: *ctx.accounts.signer.key,
+            });
+            
+            //emit an event to show new jackpot balance
+            emit!(JackpotBalance {
+                balance: ctx.accounts.jackpot_vault.deposited_fee_number * JACKPOT_FEES,
+            });        
+            
         }
 
         Ok(())

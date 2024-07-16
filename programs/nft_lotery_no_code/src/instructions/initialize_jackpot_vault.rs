@@ -4,10 +4,18 @@ pub use crate::constants::*;
 pub use crate::instructions::*;
 use anchor_lang::prelude::*;
 
+    //event for jackpot balance change
     #[event]
     pub struct JackpotBalance {
         pub balance: u32,
     }
+
+    //event for jackpot win event, with the winner address  
+    #[event]
+    pub struct JackpotWin {
+        pub winner: Pubkey,
+    }
+
 
     // Structure du compte Vault
     #[account]
