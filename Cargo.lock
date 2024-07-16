@@ -1032,7 +1032,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mpl-core-anchor-wrapper"
+name = "nft_lotery_no_code"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",

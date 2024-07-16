@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-nft_lotery_no_code = "HFDjgJwH7rWmJ3wDQdVUMc8Y4nQyRZdJSQMEFHRFFcEQ"
+nft_lotery_no_code = "CcTUi3CncoKArEfESCmyMti41e8Rn5PZFkoh1b3kWv5V"
 
 [programs.localnet]
 nft_lotery_no_code = "8UTGYawkbyuwJ8ddCpfPqdKhZ1EaVoyunnjNb476jfAd"
