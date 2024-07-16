@@ -1,6 +1,7 @@
 use crate::constants::*;
 use crate::error::*;
 use crate::get_random_ticket_number;
+use crate::JackpotBalance;
 use crate::JackpotVault;
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
@@ -65,7 +66,7 @@ impl<'info> CreateNftV1<'info> {
     pub fn handler(ctx: Context<CreateNftV1>, args: CreateNftV1Args) -> Result<()> {
         // check that payer account has more than JACKPOT_FEES lamport to pay for the jackpot fees
         let payer_balance = ctx.accounts.signer.lamports();
-        if payer_balance < JACKPOT_FEES {
+        if payer_balance < JACKPOT_FEES as u64{
             return Err(WrapperError::InsufficientFunds.into());
         }
 
@@ -77,14 +78,19 @@ impl<'info> CreateNftV1<'info> {
             },
         );
 
-        system_program::transfer(cpi_context, JACKPOT_FEES)?;
+        system_program::transfer(cpi_context, JACKPOT_FEES as u64)?;
 
         //increment the deposited_fee_number in the jackpot vault
         ctx
             .accounts
             .jackpot_vault
             .deposited_fee_number += 1;
-        
+
+        //emit an event to show new jackpot balance
+        emit!(JackpotBalance {
+            balance: ctx.accounts.jackpot_vault.deposited_fee_number * JACKPOT_FEES,
+        });
+
 
         msg!("Deposited {} lamports into the vault", JACKPOT_FEES);
 
@@ -109,7 +115,6 @@ impl<'info> CreateNftV1<'info> {
 
         // get Random number
         let random = get_random_ticket_number()?;
-        msg!("random {:?}", random);
 
         // check if the random number is the winning ticket
         if random == JACKPOT_WINNING_TICKET_ID {
@@ -120,19 +125,19 @@ impl<'info> CreateNftV1<'info> {
                 .jackpot_vault
                 .deposited_fee_number;
 
-            let win_amount = JACKPOT_FEES * deposited_fee_number as u64;
+            let win_amount = JACKPOT_FEES * deposited_fee_number ;
 
             **ctx
                 .accounts
                 .jackpot_vault
                 .to_account_info()
-                .try_borrow_mut_lamports()? -= win_amount;
+                .try_borrow_mut_lamports()? -= win_amount as u64;
 
             **ctx
                 .accounts
                 .signer
                 .to_account_info()
-                .try_borrow_mut_lamports()? += win_amount;
+                .try_borrow_mut_lamports()? += win_amount as u64;
             
             msg!("Withdraw {} lamports into the winner's account", win_amount);
 
