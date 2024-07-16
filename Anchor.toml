@@ -6,10 +6,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-mpl_core_anchor_wrapper = "7fv5M8pkM1v9p4YdC6kicbY21UoFGQA1DZUGC9NFtS34"
+nft_lotery_no_code = "HFDjgJwH7rWmJ3wDQdVUMc8Y4nQyRZdJSQMEFHRFFcEQ"
 
 [programs.localnet]
-mpl_core_anchor_wrapper = "8UTGYawkbyuwJ8ddCpfPqdKhZ1EaVoyunnjNb476jfAd"
+nft_lotery_no_code = "8UTGYawkbyuwJ8ddCpfPqdKhZ1EaVoyunnjNb476jfAd"
 
 [registry]
 url = "https://api.apr.dev"
