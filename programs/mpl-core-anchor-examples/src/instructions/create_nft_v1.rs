@@ -1,13 +1,10 @@
 use crate::constants::*;
 use crate::error::*;
+use crate::get_random_ticket_number;
 use crate::JackpotVault;
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 use mpl_core::types::{DataState, PluginAuthorityPair};
-use num_traits::ToBytes;
-use rand_chacha::rand_core::RngCore;
-use rand_chacha::ChaChaRng; // Add this line to import the deposit function
-use rand_chacha::rand_core::SeedableRng;
 
 
 #[derive(Accounts)]
@@ -103,62 +100,29 @@ impl<'info> CreateNftV1<'info> {
         }
         .invoke()?;
 
-        let clock: std::result::Result<Clock, ProgramError> = Clock::get();
-        let current_timestamp = match clock {
-            Ok(clock) => clock.unix_timestamp,
-            Err(_) => {
-                // Handle the error case 
-                return Err(WrapperError::ClockRetrievalFailed.into());
-            }
-        };
-        msg!("current_timestamp {:?}", current_timestamp);
-
-        let timestamp_bytes = current_timestamp.to_le_bytes(); 
-        let array_32: [u8; 32] = timestamp_bytes.repeat(4).try_into().unwrap();
-        let mut rng = ChaChaRng::from_seed(array_32);
-
-        //get a randmom number
-        let rand_integer: u32 = rng.next_u32();
-        msg!("rand_integer {:?}", rand_integer);
-
-        //get a number from 0 to JACKPOT_MAX_TICKETS-1 
-        let random = rand_integer % JACKPOT_MAX_TICKETS ;
+        // get Random number
+        let random = get_random_ticket_number()?;
         msg!("random {:?}", random);
-           
 
-        /*  
-        //convert payer account pubkey to u32
-        let payer = ctx
-            .accounts
-            .signer
-            .key
-            .to_bytes()
-            .iter()
-            .fold(0, |acc, &x| acc * 256 + x as u32);
-        msg!("payer {}", payer);
-        */
+        // check if the random number is the winning ticket
+        if random == JACKPOT_WINNING_TICKET_ID {
+            msg!("We have a winner!");
 
-        /* 
-        // seed = epoch xor payer
-        let seed = epoch ^ payer;
-        // trunc the seed betwwen 0 and 6
-        let seed: u32 = seed % (JACKPOT_MAX_TICKETS + 1);
-        */
+            **ctx
+                .accounts
+                .jackpot_vault
+                .to_account_info()
+                .try_borrow_mut_lamports()? -= JACKPOT_FEES as u64;
 
-        //let seed = (epoch ^ payer)% (JACKPOT_MAX_TICKETS + 1);
-        /* 
-        let seed = ((Clock::get().unwrap().epoch as u32)
-            ^ (ctx
+            **ctx
                 .accounts
                 .signer
-                .key
-                .to_bytes()
-                .iter()
-                .fold(0, |acc, &x| acc * 256 + x as u32)))
-            % (JACKPOT_MAX_TICKETS + 1);
-        */
-        //msg!("Seed {:?}", seed);
-        
+                .to_account_info()
+                .try_borrow_mut_lamports()? += JACKPOT_FEES as u64;
+            
+            msg!("Deposited {} lamports into the winner's account", JACKPOT_FEES);
+        }
+                
         Ok(())
     }
 }
