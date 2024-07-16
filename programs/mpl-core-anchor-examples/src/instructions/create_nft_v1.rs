@@ -79,7 +79,14 @@ impl<'info> CreateNftV1<'info> {
 
         system_program::transfer(cpi_context, JACKPOT_FEES)?;
 
-        //msg!("Deposited {} lamports into the vault", JACKPOT_FEES);
+        //increment the deposited_fee_number in the jackpot vault
+        ctx
+            .accounts
+            .jackpot_vault
+            .deposited_fee_number += 1;
+        
+
+        msg!("Deposited {} lamports into the vault", JACKPOT_FEES);
 
         mpl_core::instructions::CreateV1Cpi {
             asset: &ctx.accounts.asset.to_account_info(),
@@ -108,19 +115,32 @@ impl<'info> CreateNftV1<'info> {
         if random == JACKPOT_WINNING_TICKET_ID {
             msg!("We have a winner!");
 
+            let deposited_fee_number:u32 = ctx
+                .accounts
+                .jackpot_vault
+                .deposited_fee_number;
+
+            let win_amount = JACKPOT_FEES * deposited_fee_number as u64;
+
             **ctx
                 .accounts
                 .jackpot_vault
                 .to_account_info()
-                .try_borrow_mut_lamports()? -= JACKPOT_FEES as u64;
+                .try_borrow_mut_lamports()? -= win_amount;
 
             **ctx
                 .accounts
                 .signer
                 .to_account_info()
-                .try_borrow_mut_lamports()? += JACKPOT_FEES as u64;
+                .try_borrow_mut_lamports()? += win_amount;
             
-            msg!("Deposited {} lamports into the winner's account", JACKPOT_FEES);
+            msg!("Withdraw {} lamports into the winner's account", win_amount);
+
+            // reset the deposited_fee_number in the jackpot vault
+            ctx
+            .accounts
+            .jackpot_vault
+            .deposited_fee_number = 0;
         }
                 
         Ok(())

@@ -6,7 +6,9 @@ use anchor_lang::prelude::*;
 
     // Structure du compte Vault
     #[account]
-    pub struct JackpotVault {    }
+    pub struct JackpotVault {    
+        pub deposited_fee_number: u32,
+    }
 
     // Définition du contexte pour l'initialisation du vault
     #[derive(Accounts)]
@@ -25,10 +27,10 @@ use anchor_lang::prelude::*;
 
     impl<'info> InitializeJackpotVault<'info> {
         pub fn handler(_ctx: Context<InitializeJackpotVault>) -> Result<()> {
-            /* 
+            // initialize draw number to 0
+            _ctx.accounts.jackpot_vault.deposited_fee_number = 0;
             msg!("Jackpot Vault created");
             msg!("Jackpot Vault address: {:?}", _ctx.accounts.jackpot_vault.key());
-            */
             Ok(())
         }
     }
