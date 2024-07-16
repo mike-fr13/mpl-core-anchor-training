@@ -1,4 +1,6 @@
-    pub use crate::constants::*;
+    use std::mem::size_of;
+
+pub use crate::constants::*;
 pub use crate::instructions::*;
 use anchor_lang::prelude::*;
 
@@ -12,7 +14,7 @@ use anchor_lang::prelude::*;
         #[account(
             init, 
             payer = signer, 
-            space = 8 + 8, 
+            space = size_of::<JackpotVault>() + 8 +100, 
             seeds = [JACKPOT_SEED.as_bytes()], 
             bump)]
         pub jackpot_vault: Account<'info, JackpotVault>,
@@ -23,8 +25,10 @@ use anchor_lang::prelude::*;
 
     impl<'info> InitializeJackpotVault<'info> {
         pub fn handler(_ctx: Context<InitializeJackpotVault>) -> Result<()> {
+            /* 
             msg!("Jackpot Vault created");
             msg!("Jackpot Vault address: {:?}", _ctx.accounts.jackpot_vault.key());
+            */
             Ok(())
         }
     }

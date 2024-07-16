@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-mpl_core_anchor_wrapper = "8UTGYawkbyuwJ8ddCpfPqdKhZ1EaVoyunnjNb476jfAd"
+mpl_core_anchor_wrapper = "6njpZo9ZiibMBfXgG4bJu3YTzESnA92VC1qzrjv1C4hu"
 
 [programs.localnet]
 mpl_core_anchor_wrapper = "8UTGYawkbyuwJ8ddCpfPqdKhZ1EaVoyunnjNb476jfAd"

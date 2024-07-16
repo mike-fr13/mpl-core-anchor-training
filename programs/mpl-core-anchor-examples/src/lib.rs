@@ -6,7 +6,7 @@ use anchor_lang::prelude::*;
 pub use constants::*;
 pub use instructions::*;
 
-declare_id!("8UTGYawkbyuwJ8ddCpfPqdKhZ1EaVoyunnjNb476jfAd");
+declare_id!("6njpZo9ZiibMBfXgG4bJu3YTzESnA92VC1qzrjv1C4hu");
 
 #[program]
 pub mod nft_lotery_no_code {

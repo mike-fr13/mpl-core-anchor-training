@@ -6,4 +6,6 @@ pub enum WrapperError {
     InvalidPluginType,
     #[msg("Insufficient funds")]
     InsufficientFunds,
+    #[msg("Clock retrieval failed")]
+    ClockRetrievalFailed,
 }
